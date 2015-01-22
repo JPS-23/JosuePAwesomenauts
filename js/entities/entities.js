@@ -11,7 +11,7 @@ game.PlayerEntity = me.Entity.extend({
                 }
         }]);
     
-        this.body.setVelocity(5, 0);
+        this.body.setVelocity(5, 0);//velocity represents our current position
     
     },
     
@@ -25,7 +25,7 @@ game.PlayerEntity = me.Entity.extend({
             this.body.vel.x = 0;
         }
         
-        this.body.update(delta);
+        this.body.update(delta);//delta is the change of time that has happened
         return true;
     }
 });
