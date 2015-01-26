@@ -11,7 +11,7 @@ game.PlayerEntity = me.Entity.extend({
                 }
         }]);
     
-        this.body.setVelocity(5, 0);//velocity represents our current position
+        this.body.setVelocity(5, 20);//velocity represents our current position
     
     },
     
