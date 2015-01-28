@@ -38,11 +38,82 @@ game.PlayerEntity = me.Entity.extend({
         this.renderable.setCurrentAnimation("idle");
     }
         
- 
         
         this.body.update(delta);//delta is the change of time that has happened
 
         this._super(me.Entity, "update", [delta]);//this updates the animations
         return true;
     }
+});
+
+game.PlayerBaseEntity = me.Entity.extend({//this is my player base entity
+    init : function(x, y, settings) {
+        this._super(me.Entity, 'init', [x, y, {
+                image: "tower",
+                width: 100,
+                height: 100,
+                spritewidth: "100",
+                spriteheight: "100",
+                getShape: function() {
+                    return (new me.Rect(0, 0, 100, 100)).toPolygon();
+                }
+        }]);
+        this.broken = false;//these are varibales i can use
+        this.health = 10;
+        this.alwaysUpdate = true;//even if we are not on the screen it still updates
+        this.body.onCollision = this.onCollision.bind(this);//this is a on collision call
+        
+        this.type = "PlayerBaseEntity";
+    },
+    
+    update:function() {
+       if(this.health<=0) {//this says that if my health is 0 then were dead
+           this.broken = true;
+       }
+       this.body.update(delta);//this makes sure the game updates
+       
+       this._super(me.Entity, "update", [delta]);//this has the last update time
+       return true;
+    },
+    
+    onCollision: function() {
+        
+    }
+
+});
+
+game.EnemyBaseEntity = me.Entity.extend({
+    init : function(x, y, settings) {
+        this._super(me.Entity, 'init', [x, y, {
+                image: "tower",
+                width: 100,
+                height: 100,
+                spritewidth: "100",
+                spriteheight: "100",
+                getShape: function() {
+                    return (new me.Rect(0, 0, 100, 100)).toPolygon();
+                }
+        }]);
+        this.broken = false;
+        this.health = 10;
+        this.alwaysUpdate = true;
+        this.body.onCollision = this.onCollision.bind(this);
+        
+        this.type = "EnemyBaseEntity";
+    },
+    
+    update:function() {
+       if(this.health<=0) {
+           this.broken = true;
+       }
+       this.body.update(delta);
+       
+       this._super(me.Entity, "update", [delta]);
+       return true;
+    },
+    
+    onCollision: function() {
+        
+    }
+
 });

@@ -7,6 +7,7 @@ game.resources = [
         {name: "background-tiles", type:"image", src: "data/img/background-tiles.png"},//this adds the background images and the meta tiles
         {name: "meta-tiles", type:"image", src: "data/img/meta-tiles.png"},
         {name: "player", type:"image", src: "data/img/orcSpear.png"},//this is to load the player 
+        {name: "tower", type:"image", src: "data/img/tower_round.svg.png"},//this is to load our tower image
 
 	/* Atlases 
 	 * @example
