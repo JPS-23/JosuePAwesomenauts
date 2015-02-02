@@ -28,11 +28,17 @@ game.PlayerEntity = me.Entity.extend({
             //me.timer.tick makes the movement look smooth
             this.body.vel.x += this.body.accel.x * me.timer.tick;
             this.flipX(true);//this flips the animation
+        }else if(me.input.isKeyPressed("left")) {
+            this.body.vel.x -=this.body.accel.x * me.timer.tick;
+            this.flipX(false);
         }else{
             this.body.vel.x = 0;
         }
         
-        
+        if(me.input.isKeyPressed("jump") && !this.jumping && !this.falling){
+            this.jumping = true;
+            this.body.vel.y -= this.body.accel.y *me.timer.tick;
+        }
         
         if(me.input.isKeyPressed("attack")) {//this is happening at the same time as the if statement
             if(!this.renderable.isCurrentAnimation("attack")){
@@ -84,15 +90,15 @@ game.PlayerBaseEntity = me.Entity.extend({//this is my player base entity
                 spritewidth: "100",
                 spriteheight: "100",
                 getShape: function() {
-                    return (new me.Rect(0, 0, 100, 100)).toPolygon();
+                    return (new me.Rect(0, 0, 100, 70)).toPolygon();
                 }
         }]);
         this.broken = false;//these are varibales i can use
-        this.health = 10;
+        this.health = 10;//this is the towers health
         this.alwaysUpdate = true;//even if we are not on the screen it still updates
         this.body.onCollision = this.onCollision.bind(this);//this is a on collision call
         console.log("init");
-        this.type = "PlayerBaseEntity";
+        this.type = "PlayerBaseEntity";//this checks what were running into
         
         this.renderable.addAnimation("idle", [0]);//this fixes the tower image
         this.renderable.addAnimation("broken", [1]);
@@ -125,7 +131,7 @@ game.EnemyBaseEntity = me.Entity.extend({
                 spritewidth: "100",
                 spriteheight: "100",
                 getShape: function() {
-                    return (new me.Rect(0, 0, 100, 100)).toPolygon();
+                    return (new me.Rect(0, 0, 100, 70)).toPolygon();
                 }
         }]);
         this.broken = false;
