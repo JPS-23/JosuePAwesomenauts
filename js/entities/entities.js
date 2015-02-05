@@ -9,9 +9,10 @@ game.PlayerEntity = me.Entity.extend({
                 getShape: function() {
                     return(new me.Rect(0, 0, 64, 64)).toPolygon();//this returns a new shape
                 }
-        }]);
-    
+        }]);   
         this.body.setVelocity(5, 20);//velocity represents our current position
+        //Keeps track of which direction your charector is going
+        this.facing = "right";
         me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);//this makes the screen follow the player
     
         this.renderable.addAnimation("idle", [78]);
@@ -27,8 +28,10 @@ game.PlayerEntity = me.Entity.extend({
             //setVelocity() and multiplying it by me.timer.tick.
             //me.timer.tick makes the movement look smooth
             this.body.vel.x += this.body.accel.x * me.timer.tick;
+            this.facing = "right";
             this.flipX(true);//this flips the animation
         }else if(me.input.isKeyPressed("left")) {
+            this.facing = "left";
             this.body.vel.x -=this.body.accel.x * me.timer.tick;
             this.flipX(false);
         }else{
@@ -39,6 +42,7 @@ game.PlayerEntity = me.Entity.extend({
             this.jumping = true;
             this.body.vel.y -= this.body.accel.y *me.timer.tick;
         }
+        
         
         if(me.input.isKeyPressed("attack")) {//this is happening at the same time as the if statement
             if(!this.renderable.isCurrentAnimation("attack")){
@@ -73,11 +77,30 @@ game.PlayerEntity = me.Entity.extend({
             }
         }
         
-        
+        me.collision.check(this, true, this.collideHandler.bind(this), true);
         this.body.update(delta);//delta is the change of time that has happened
+        
+        
 
         this._super(me.Entity, "update", [delta]);//this updates the animations
         return true;
+    },
+    
+    collideHandler: function(response) {
+        if(response.b.type==='EnemyBaseEntity'){//this represents the difference between the players and its base's position
+            var ydif = this.pos.y - response.b.pos.y;
+            var xdif = this.pos.x - response.b.pos.x;
+            
+            console.log("xdif" + xdif + "ydif" + ydif);
+            
+            if(xdif<-35 && this.facing==='right' && (xdif<0)){
+               this.body.vel.x = 0;
+               this.pos.x = this.pos.x -1;//this stops our player from coming in to the left
+            }else if(xdif<61 && this.facing==='left' && (xdif<0)){
+                this.body.vel.x = 0;
+                this.pos.x = this.pos.x +1;
+            }
+        }
     }
 });
 
