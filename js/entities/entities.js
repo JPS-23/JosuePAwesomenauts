@@ -96,7 +96,7 @@ game.PlayerEntity = me.Entity.extend({
             if(xdif<-35 && this.facing==='right' && (xdif<0)){
                this.body.vel.x = 0;
                this.pos.x = this.pos.x -1;//this stops our player from coming in to the left
-            }else if(xdif<61 && this.facing==='left' && (xdif<0)){
+            }else if(xdif<70 && this.facing==='left' && (xdif<0)){
                 this.body.vel.x = 0;
                 this.pos.x = this.pos.x +1;
             }
