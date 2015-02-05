@@ -13,6 +13,9 @@ game.PlayerEntity = me.Entity.extend({
         this.body.setVelocity(5, 20);//velocity represents our current position
         //Keeps track of which direction your charector is going
         this.facing = "right";
+        this.now = new Date().getTime();//this keeps track of the time in the game
+        this.lastHit = this.now;//this is a last hit variable
+        this.lastAttack = new Date().getTime();//this is a hit delay variable
         me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);//this makes the screen follow the player
     
         this.renderable.addAnimation("idle", [78]);
@@ -23,6 +26,7 @@ game.PlayerEntity = me.Entity.extend({
     },
     
     update: function(delta){//if i dont update its not going to change the game
+        this.now = new Date().getTime;//this updates our timer
         if(me.input.isKeyPressed("right")) {
             //adds to the position of my x by the velocity defined above in
             //setVelocity() and multiplying it by me.timer.tick.
@@ -56,26 +60,13 @@ game.PlayerEntity = me.Entity.extend({
                 this.renderable.setAnimationFrame();
             }
         }
-        else if(this.body.vel.x !== 0){
+        else if(this.body.vel.x !== 0 && !this.renderable.isCurrentAnimation("attack")){
             if(!this.renderable.isCurrentAnimation("walk")){
                 this.renderable.setCurrentAnimation("walk");
         }
-    }else{
+    }else if(!this.renderable.isCurrentAnimation("attack")){
         this.renderable.setCurrentAnimation("idle");
     }
-    
-    if(me.input.isKeyPressed("attack")) {//this is happening at the same time as the if statement
-            if(!this.renderable.isCurrentAnimation("attack")){
-                console.log(!this.renderable.isCurrentAnimation("attack"));
-                //Sets the current animation to attack and once that is over
-                //goes back to idle animation
-                this.renderable.setCurrentAnimation("attack", "idle");
-                //Make sit so that the next time we start this sequence we begin
-                //from the first animation, not wherever we left off when we
-                //switched to another animation 
-                this.renderable.setAnimationFrame();
-            }
-        }
         
         me.collision.check(this, true, this.collideHandler.bind(this), true);
         this.body.update(delta);//delta is the change of time that has happened
@@ -102,6 +93,12 @@ game.PlayerEntity = me.Entity.extend({
                 this.body.vel.x = 0;
                 this.pos.x = this.pos.x +1;
             }
+            //this states that if the enemy base is attacked it loses health
+            if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= 1000){
+                console.log("tower Hit");
+                this.lastHit = this.now;//this updates this.lastHit
+                response.b.loseHealth();
+            }
         }
     }
 });
@@ -119,7 +116,7 @@ game.PlayerBaseEntity = me.Entity.extend({//this is my player base entity
                 }
         }]);
         this.broken = false;//these are varibales i can use
-        this.health = 10;//this is the towers health
+        this.health = 5;//this is the towers health
         this.alwaysUpdate = true;//even if we are not on the screen it still updates
         this.body.onCollision = this.onCollision.bind(this);//this is a on collision call
         console.log("init");
@@ -184,6 +181,10 @@ game.EnemyBaseEntity = me.Entity.extend({
     
     onCollision: function() {
         
+    },
+    //we are adding a lose health function
+    loseHealth: function(){
+        this.health--;
     }
 
 });
