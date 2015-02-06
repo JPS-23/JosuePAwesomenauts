@@ -42,10 +42,8 @@ var game = {
                 me.pool.register("player", game.PlayerEntity, true);//this registers our player also connects it to the player entity
                 me.pool.register("PlayerBase", game.PlayerBaseEntity);//this registers the player base
                 me.pool.register("EnemyBase", game.EnemyBaseEntity);//this registers the enemy base
-                
-                me.pool.register("PlayerBase", game.PlayerBaseEntity);//this register our PlayerBaseEntity
-                me.pool.register("EnemyBase", game.EnemyBaseEntity);//this register our EnemyBaseEntity
-                
+                me.pool.register("EnemyCreep", game.EnemyCreep, true);
+                               
 		me.state.set(me.state.MENU, new game.TitleScreen());
 		me.state.set(me.state.PLAY, new game.PlayScreen());
 
@@ -53,3 +51,4 @@ var game = {
 		me.state.change(me.state.PLAY);
 	}
 };
+
