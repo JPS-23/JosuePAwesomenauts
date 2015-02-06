@@ -204,7 +204,7 @@ game.EnemyCreep = me.Entity.extend({
         this.health = 10;//this is the enemys health
         this.alwaysUpdate = true;//this updates the function
         
-        this.setVelocity(3, 20);//this gives th enemy its velocity
+        this.body.setVelocity(3, 20);//this gives th enemy its velocity
         
         this.type = "EnemyCreep";
         
@@ -217,3 +217,25 @@ game.EnemyCreep = me.Entity.extend({
         
     }
 });
+
+game.GameManager = Object.extend({
+    init: function(x, y, settings){//were initializing the function here
+        this.now = new Date().getTime();
+        this.lastCreep = new Date().getTime();//this keeps track of the last time we had a creep
+        
+        this.alwaysUpdate = true;//this makes sure were always updating
+    },
+    
+    update: function(){
+        this.now = new Date().getTime();
+        
+        if(Math.round(this.now/1000)%10 ===0 && (this.now - this.lastCreep >= 1000)){
+            this.lastCreep = this.now;
+            var creepe = me.pool.pull("EnemyCreep", 1000 , 0, {});//this sets our creeps
+            me.game.world.addChild(creepe, 5);//this adds a creepe to the world
+        }
+        
+        return true;
+    }
+});
+

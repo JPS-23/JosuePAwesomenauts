@@ -42,7 +42,8 @@ var game = {
                 me.pool.register("player", game.PlayerEntity, true);//this registers our player also connects it to the player entity
                 me.pool.register("PlayerBase", game.PlayerBaseEntity);//this registers the player base
                 me.pool.register("EnemyBase", game.EnemyBaseEntity);//this registers the enemy base
-                me.pool.register("EnemyCreep", game.EnemyCreep, true);
+                me.pool.register("EnemyCreep", game.EnemyCreep, true);//this registers the enemy
+                me.pool.register("GameManager", game.GameManager);//this registers the enemys code
                                
 		me.state.set(me.state.MENU, new game.TitleScreen());
 		me.state.set(me.state.PLAY, new game.PlayScreen());
