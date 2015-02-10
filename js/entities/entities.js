@@ -119,8 +119,7 @@ game.PlayerBaseEntity = me.Entity.extend({//this is my player base entity
         this.health = 5;//this is the towers health
         this.alwaysUpdate = true;//even if we are not on the screen it still updates
         this.body.onCollision = this.onCollision.bind(this);//this is a on collision call
-        console.log("init");
-        this.type = "PlayerBaseEntity";//this checks what were running into
+        this.type = "PlayerBase";//this checks what were running into
         
         this.renderable.addAnimation("idle", [0]);//this fixes the tower image
         this.renderable.addAnimation("broken", [1]);
@@ -136,6 +135,10 @@ game.PlayerBaseEntity = me.Entity.extend({//this is my player base entity
        
        this._super(me.Entity, "update", [delta]);//this has the last update time
        return true;
+    },
+    
+    loseHealth: function(damage){
+        this.health = this.health - damage;
     },
     
     onCollision: function() {
@@ -203,7 +206,13 @@ game.EnemyCreep = me.Entity.extend({
         }]);
         this.health = 10;//this is the enemys health
         this.alwaysUpdate = true;//this updates the function
-        
+        //this.attacking lets us know if the enemy is currently attaking
+        this.attacking = false;
+        //keeps track of when our creep last attacked anything
+        this.lastAttacking = new Date().getTime();
+        //keeps track of the last time our creep hit anything
+        this.lastHit = new Date().getTime();
+        this.now = new Date().getTime();
         this.body.setVelocity(3, 20);//this gives th enemy its velocity
         
         this.type = "EnemyCreep";
@@ -214,19 +223,39 @@ game.EnemyCreep = me.Entity.extend({
     },
     
     update: function(delta){
-        
+        this.now = new Date().getTime();
         
         this.body.vel.x -= this.body.accel.x * me.timer.tick;//this gives the enemy a velocity
+        
+        me.collision.check(this, true, this.collideHandler.bind(this), true);
         
         
         this.body.update(delta);//delta is the change of time that has happened
         
         
 
-        this._super(me.Entity, "update", [delta]);//this updates the animations
-        
+        this._super(me.Entity, "update", [delta]);//this updates the animations       
         return true;
+    },
+    
+    collideHandler: function(response){//this gives a parameter response
+        if(response.b.type==='PlayerBase'){
+            this.attacking=true;//this says were attacking
+            //this.lastAttacking=this.now;//this says the last time i attacked
+            this.body.vel.x = 0;//this sets our velocity
+            //keeps moving the creep to the right to maintain its position
+            this.pos.x = this.pos.x + 1;
+            //checls that it has been at least 1 second since this creep hit a base
+            if((this.now-this.lastHit >= 1000)){
+                //updates the lastHit timer
+                this.lastHit = this.now;
+                //makes the playerBase call its loseHealth functionand pases it as 
+                //as a damge of 1
+                response.b.loseHealth(1);//this takes away health from our player
+            }
+        }
     }
+    
 });
 
 game.GameManager = Object.extend({
