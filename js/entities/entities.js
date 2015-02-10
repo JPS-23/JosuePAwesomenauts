@@ -10,6 +10,8 @@ game.PlayerEntity = me.Entity.extend({
                     return(new me.Rect(0, 0, 64, 64)).toPolygon();//this returns a new shape
                 }
         }]);   
+        this.type = "PlayerEntity";
+        this.health = 20;//this gives our player its health
         this.body.setVelocity(5, 20);//velocity represents our current position
         //Keeps track of which direction your charector is going
         this.facing = "right";
@@ -75,6 +77,11 @@ game.PlayerEntity = me.Entity.extend({
 
         this._super(me.Entity, "update", [delta]);//this updates the animations
         return true;
+    },
+    
+    loseHealth: function(damage){
+      this.health = this.health - damage;
+      console.log(this.health);
     },
     
     collideHandler: function(response) {
@@ -250,6 +257,26 @@ game.EnemyCreep = me.Entity.extend({
                 //updates the lastHit timer
                 this.lastHit = this.now;
                 //makes the playerBase call its loseHealth functionand pases it as 
+                //as a damge of 1
+                response.b.loseHealth(1);//this takes away health from our player
+            }
+        }else if(response.b.type==='PlayerEntity'){//this makes the creep hit only 1 object at a time
+            var xdif = this.pos.x - response.b.pos.x;//this checks our x position
+            
+            this.attacking=true;//this says were attacking
+            //this.lastAttacking=this.now;//this says the last time i attacked
+            
+            
+            if(xdif>0){
+                //keeps moving the creep to the right to maintain its position
+                this.pos.x = this.pos.x + 1;
+                this.body.vel.x = 0;//this sets our velocity
+            }
+            //checls that it has been at least 1 second since this creep hit something
+            if((this.now-this.lastHit >= 1000) && xdif>0){
+                //updates the lastHit timer
+                this.lastHit = this.now;
+                //makes the playerBase call its loseHealth function and pases it as 
                 //as a damge of 1
                 response.b.loseHealth(1);//this takes away health from our player
             }
