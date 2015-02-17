@@ -106,6 +106,28 @@ game.PlayerEntity = me.Entity.extend({
                 this.lastHit = this.now;//this updates this.lastHit
                 response.b.loseHealth();
             }
+        }else if(response.b.type==='EnemyCreep'){
+            var xdif = this.pos.x - response.b.pos.x;//these set our creeps
+            var ydif = this.pos.y - response.b.pos.y;//x and y positions
+            
+            if(xdif>0){//this is our x difference
+                this.pos.x = this.pos.x + 1;
+                if(this.facing==="left"){//this keeps track of which way we face
+                    this.body.vel.x = 0;
+                }
+            }else{//this code keeps the creep from walking through our base
+                this.pos.x = this.pos.x - 1;
+                if(this.facing==="right"){//this keeps us from walking thorugh our creep
+                    this.body.vel.x = 0;
+                }
+            }
+            if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= 1000
+                    && (Math.abs(ydif) <=40) &&//this has our ydifference absolute value
+                    ((xdif>0) && this.facing==="left") || ((xdif<0) && this.facing==="right")
+                    ){//the code above stops us from going to much to the left or right
+                this.lastHit = this.now;
+                response.b.loseHealth(1);//this code lets us hurt our enemy if were attacking it
+            }   
         }
     }
 });
@@ -229,7 +251,16 @@ game.EnemyCreep = me.Entity.extend({
     
     },
     
+    loseHealth: function(damage){
+        this.health = this.health - damage;  
+    },
+    
     update: function(delta){
+        console.log(this.health);
+        if(this.health<= 0){//this lets us kill our enemy creep
+            me.game.world.removeChild(this);
+        }
+        
         this.now = new Date().getTime();
         
         this.body.vel.x -= this.body.accel.x * me.timer.tick;//this gives the enemy a velocity
