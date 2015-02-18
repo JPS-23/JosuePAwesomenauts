@@ -3,9 +3,21 @@
 var game = {
 
 	// an object where to store game information
-	data : {
-		// score
-		score : 0
+	data : {//this is data we use in the game
+		// score, these are aslo basic variables
+		score : 0,
+                enemyBaseHealth: 10,
+                playerBaseHealth: 10,
+                enemyCreepHealth: 10,
+                playerHealth: 10,
+                enemyCreepAttack: 1,
+                playerAttack: 5,
+                playerAttackTimer: 2000,
+                enemyCreepAttackTimer:1000,
+                playerMoveSpeed:5,
+                creepMoveSpeed: 5,
+                gameManager: "",
+                player: ""
 	},
 	
 	

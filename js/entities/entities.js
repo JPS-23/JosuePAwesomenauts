@@ -11,12 +11,13 @@ game.PlayerEntity = me.Entity.extend({
                 }
         }]);   
         this.type = "PlayerEntity";
-        this.health = 20;//this gives our player its health
-        this.body.setVelocity(5, 20);//velocity represents our current position
+        this.health = game.data.playerHealth;//this gives our player its health
+        this.body.setVelocity(game.data.playerMoveSpeed, 20);//velocity represents our current position
         //Keeps track of which direction your charector is going
         this.facing = "right";
         this.now = new Date().getTime();//this keeps track of the time in the game
         this.lastHit = this.now;//this is a last hit variable
+        this.dead = false;
         this.lastAttack = new Date().getTime();//this is a hit delay variable
         me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);//this makes the screen follow the player
     
@@ -29,6 +30,14 @@ game.PlayerEntity = me.Entity.extend({
     
     update: function(delta){//if i dont update its not going to change the game
         this.now = new Date().getTime;//this updates our timer
+        
+        if (this.health <= 0){
+            this.dead = true;
+            this.pos.x = 10;
+            this.pos.y = 0;
+            this.health = game.data.playerHealth;
+        }
+        
         if(me.input.isKeyPressed("right")) {
             //adds to the position of my x by the velocity defined above in
             //setVelocity() and multiplying it by me.timer.tick.
@@ -45,7 +54,7 @@ game.PlayerEntity = me.Entity.extend({
         }
         
         if(me.input.isKeyPressed("jump") && !this.jumping && !this.falling){
-            this.jumping = true;
+            this.body.jumping = true;
             this.body.vel.y -= this.body.accel.y *me.timer.tick;
         }
         
@@ -101,10 +110,10 @@ game.PlayerEntity = me.Entity.extend({
                 this.pos.x = this.pos.x +1;
             }
             //this states that if the enemy base is attacked it loses health
-            if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= 1000){
+            if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= game.data.playerAttackTimer){
                 console.log("tower Hit");
                 this.lastHit = this.now;//this updates this.lastHit
-                response.b.loseHealth();
+                response.b.loseHealth(game.data.playerAttack);
             }
         }else if(response.b.type==='EnemyCreep'){
             var xdif = this.pos.x - response.b.pos.x;//these set our creeps
@@ -121,12 +130,12 @@ game.PlayerEntity = me.Entity.extend({
                     this.body.vel.x = 0;
                 }
             }
-            if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= 1000
+            if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= game.data.playerAttackTimer
                     && (Math.abs(ydif) <=40) &&//this has our ydifference absolute value
                     ((xdif>0) && this.facing==="left") || ((xdif<0) && this.facing==="right")
                     ){//the code above stops us from going to much to the left or right
                 this.lastHit = this.now;
-                response.b.loseHealth(1);//this code lets us hurt our enemy if were attacking it
+                response.b.loseHealth(game.data.playerAttack);//this code lets us hurt our enemy if were attacking it
             }   
         }
     }
@@ -145,7 +154,7 @@ game.PlayerBaseEntity = me.Entity.extend({//this is my player base entity
                 }
         }]);
         this.broken = false;//these are varibales i can use
-        this.health = 5;//this is the towers health
+        this.health = game.data.playerBaseHealth;//this is the towers health
         this.alwaysUpdate = true;//even if we are not on the screen it still updates
         this.body.onCollision = this.onCollision.bind(this);//this is a on collision call
         this.type = "PlayerBase";//this checks what were running into
@@ -189,7 +198,7 @@ game.EnemyBaseEntity = me.Entity.extend({
                 }
         }]);
         this.broken = false;
-        this.health = 10;
+        this.health = game.data.enemyBaseHealth;
         this.alwaysUpdate = true;
         this.body.onCollision = this.onCollision.bind(this);
         
@@ -233,7 +242,7 @@ game.EnemyCreep = me.Entity.extend({
                 return (new me.Rect(0, 0, 32, 64)).toPolygon();
             }//we need this code for our entities
         }]);
-        this.health = 10;//this is the enemys health
+        this.health = game.data.enemyCreepHealth;//this is the enemys health
         this.alwaysUpdate = true;//this updates the function
         //this.attacking lets us know if the enemy is currently attaking
         this.attacking = false;
@@ -289,7 +298,7 @@ game.EnemyCreep = me.Entity.extend({
                 this.lastHit = this.now;
                 //makes the playerBase call its loseHealth functionand pases it as 
                 //as a damge of 1
-                response.b.loseHealth(1);//this takes away health from our player
+                response.b.loseHealth(game.data.enemyCreepAttack);//this takes away health from our player
             }
         }else if(response.b.type==='PlayerEntity'){//this makes the creep hit only 1 object at a time
             var xdif = this.pos.x - response.b.pos.x;//this checks our x position
@@ -309,7 +318,7 @@ game.EnemyCreep = me.Entity.extend({
                 this.lastHit = this.now;
                 //makes the playerBase call its loseHealth function and pases it as 
                 //as a damge of 1
-                response.b.loseHealth(1);//this takes away health from our player
+                response.b.loseHealth(game.data.enemyCreepAttack);//this takes away health from our player
             }
         }
     }
