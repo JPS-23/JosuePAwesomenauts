@@ -33,9 +33,6 @@ game.PlayerEntity = me.Entity.extend({
         
         if (this.health <= 0){
             this.dead = true;
-            this.pos.x = 10;
-            this.pos.y = 0;
-            this.health = game.data.playerHealth;
         }
         
         if(me.input.isKeyPressed("right")) {
@@ -104,10 +101,10 @@ game.PlayerEntity = me.Entity.extend({
             }
             else if(xdif<-35 && this.facing==='right' && (xdif<0)){
                this.body.vel.x = 0;//the code above inputs our x difference
-               this.pos.x = this.pos.x -1;//this stops our player from coming in to the left
+               //this.pos.x = this.pos.x -1;//this stops our player from coming in to the left
             }else if(xdif<70 && this.facing==='left' && (xdif<0)){
                 this.body.vel.x = 0;
-                this.pos.x = this.pos.x +1;
+                //this.pos.x = this.pos.x +1;
             }
             //this states that if the enemy base is attacked it loses health
             if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= game.data.playerAttackTimer){
@@ -120,12 +117,12 @@ game.PlayerEntity = me.Entity.extend({
             var ydif = this.pos.y - response.b.pos.y;//x and y positions
             
             if(xdif>0){//this is our x difference
-                this.pos.x = this.pos.x + 1;
+                //this.pos.x = this.pos.x + 1;
                 if(this.facing==="left"){//this keeps track of which way we face
                     this.body.vel.x = 0;
                 }
             }else{//this code keeps the creep from walking through our base
-                this.pos.x = this.pos.x - 1;
+                //this.pos.x = this.pos.x - 1;
                 if(this.facing==="right"){//this keeps us from walking thorugh our creep
                     this.body.vel.x = 0;
                 }
@@ -335,6 +332,11 @@ game.GameManager = Object.extend({
     
     update: function(){
         this.now = new Date().getTime();
+        
+        if(game.data.player.dead){
+            me.game.world.removeChild(game.data.player);
+            me.state.current().resetPlayer(10, 0);//this is for our reset function
+        }
         
         if(Math.round(this.now/1000)%10 ===0 && (this.now - this.lastCreep >= 1000)){
             this.lastCreep = this.now;
