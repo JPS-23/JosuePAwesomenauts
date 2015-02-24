@@ -8,7 +8,8 @@ game.resources = [
         {name: "meta-tiles", type:"image", src: "data/img/meta-tiles.png"},
         {name: "player", type:"image", src: "data/img/orcSpear.png"},//this is to load the player 
         {name: "tower", type:"image", src: "data/img/tower_round.svg.png"},//this is to load our tower image
-        {name: "creep1", type:"image", src: "data/img/brainmonster.png"},
+        {name: "creep1", type:"image", src: "data/img/brainmonster.png"},//this loads our creep image
+        {name: "title-screen", type:"image", src: "data/img/title.png"},
         
 	/* Atlases 
 	 * @example
