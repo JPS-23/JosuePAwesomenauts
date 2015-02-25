@@ -18,6 +18,7 @@ game.PlayerEntity = me.Entity.extend({
         this.now = new Date().getTime();//this keeps track of the time in the game
         this.lastHit = this.now;//this is a last hit variable
         this.dead = false;
+        this.attack = game.data.playerAttack;
         this.lastAttack = new Date().getTime();//this is a hit delay variable
         me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);//this makes the screen follow the player
     
@@ -58,7 +59,6 @@ game.PlayerEntity = me.Entity.extend({
         
         if(me.input.isKeyPressed("attack")) {//this is happening at the same time as the if statement
             if(!this.renderable.isCurrentAnimation("attack")){
-                console.log(!this.renderable.isCurrentAnimation("attack"));
                 //Sets the current animation to attack and once that is over
                 //goes back to idle animation
                 this.renderable.setCurrentAnimation("attack", "idle");
@@ -87,7 +87,6 @@ game.PlayerEntity = me.Entity.extend({
     
     loseHealth: function(damage){
       this.health = this.health - damage;
-      console.log(this.health);
     },
     
     collideHandler: function(response) {
@@ -108,7 +107,7 @@ game.PlayerEntity = me.Entity.extend({
             }
             //this states that if the enemy base is attacked it loses health
             if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= game.data.playerAttackTimer){
-                console.log("tower Hit");
+                
                 this.lastHit = this.now;//this updates this.lastHit
                 response.b.loseHealth(game.data.playerAttack);
             }
@@ -132,6 +131,13 @@ game.PlayerEntity = me.Entity.extend({
                     ((xdif>0) && this.facing==="left") || ((xdif<0) && this.facing==="right")
                     ){//the code above stops us from going to much to the left or right
                 this.lastHit = this.now;
+                //if the creeps health i sless than our attack, execute code in if statement
+                if(response.b.health <= game.data.playerAttack){
+                    //adds one gold for every creep kill
+                    game.data.gold += 1;
+                    console.log("Current gold: " + game.data.gold);
+                }
+                
                 response.b.loseHealth(game.data.playerAttack);//this code lets us hurt our enemy if were attacking it
             }   
         }
@@ -262,7 +268,6 @@ game.EnemyCreep = me.Entity.extend({
     },
     
     update: function(delta){
-        console.log(this.health);
         if(this.health<= 0){//this lets us kill our enemy creep
             me.game.world.removeChild(this);
         }
@@ -326,7 +331,7 @@ game.GameManager = Object.extend({
     init: function(x, y, settings){//were initializing the function here
         this.now = new Date().getTime();
         this.lastCreep = new Date().getTime();//this keeps track of the last time we had a creep
-        
+        this.paused = false;
         this.alwaysUpdate = true;//this makes sure were always updating
     },
     
@@ -338,6 +343,11 @@ game.GameManager = Object.extend({
             me.state.current().resetPlayer(10, 0);//this is for our reset function
         }
         
+        if(Math.round(this.now/1000)%20 ===0 && (this.now - this.lastCreep >= 1000)){
+            game.data.gold += 1;
+            console.log("Current gold: " + game.data.gold);
+        }
+        //these lines of code are for every creep we kill we get gold
         if(Math.round(this.now/1000)%10 ===0 && (this.now - this.lastCreep >= 1000)){
             this.lastCreep = this.now;
             var creepe = me.pool.pull("EnemyCreep", 1000 , 0, {});//this sets our creeps
