@@ -7,7 +7,12 @@
             <file>file:/C:/xampp/htdocs/JosuePAwesomenauts/js/resources.js</file>
             <file>file:/C:/xampp/htdocs/JosuePAwesomenauts/js/screens/play.js</file>
             <file>file:/C:/xampp/htdocs/JosuePAwesomenauts/js/screens/title.js</file>
+            <file>file:/C:/xampp/htdocs/JosuePAwesomenauts/js/entities/GameManager.js</file>
+            <file>file:/C:/xampp/htdocs/JosuePAwesomenauts/js/entities/EnemyCreep.js</file>
             <file>file:/C:/xampp/htdocs/JosuePAwesomenauts/js/game.js</file>
+            <file>file:/C:/xampp/htdocs/JosuePAwesomenauts/index.php</file>
+            <file>file:/C:/xampp/htdocs/JosuePAwesomenauts/js/entities/PlayerBaseEntity.js</file>
+            <file>file:/C:/xampp/htdocs/JosuePAwesomenauts/js/entities/EnemyBaseEntity.js</file>
         </group>
     </open-files>
 </project-private>

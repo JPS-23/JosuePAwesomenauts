@@ -1,32 +1,54 @@
 game.PlayerEntity = me.Entity.extend({
     init: function(x, y, settings) {//we set up our functions here
-        this._super(me.Entity, 'init', [x, y, {//this reaches into the constructer of entity's
-                image: "player",//this includes and image and its name
-                width: 64,//the width & height tell the screen what amount of space to preserve
-                height: 64,
-                spritewidth: "64",//sprite width and height pass the information
-                spriteheight: "64",
-                getShape: function() {
-                    return(new me.Rect(0, 0, 64, 64)).toPolygon();//this returns a new shape
-                }
-        }]);   
+        this.setSuper();
+        this.setPlayerTimers();
+        this.setAttributes();    
         this.type = "PlayerEntity";
-        this.health = game.data.playerHealth;//this gives our player its health
-        this.body.setVelocity(game.data.playerMoveSpeed, 20);//velocity represents our current position
-        //Keeps track of which direction your charector is going
-        this.facing = "right";
+        this.setFlags();//these are things that are either one way or another                        
+        
+        me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);//this makes the screen follow the player
+        
+        this.addAnimation();
+                    
+        this.renderable.setCurrentAnimation("idle");
+    },
+    //its good to try and keep functions under 20 lines
+    setSuper: function(){//this is the setSuper function that sets the setSuper class
+       this._super(me.Entity, 'init', [x, y, {
+               image: "player",
+               width: 64,
+               height: 64,
+               spritewidth: "64",
+               spriteheight: "64",
+               getShape: function(){
+                   return(new me.Rect(0, 0, 64, 64)).toPolygon();
+               }
+       }]);
+    },
+    
+    setPlayerTimers: function(){
         this.now = new Date().getTime();//this keeps track of the time in the game
         this.lastHit = this.now;//this is a last hit variable
-        this.dead = false;
-        this.attack = game.data.playerAttack;
         this.lastAttack = new Date().getTime();//this is a hit delay variable
-        me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);//this makes the screen follow the player
+    },
     
+    setAttributes: function(){
+        this.health = game.data.playerHealth;//this gives our player its health
+        this.body.setVelocity(game.data.playerMoveSpeed, 20);//velocity represents our current position
+        this.attack = game.data.playerAttack;
+    },
+    
+    setFlags: function(){
+        //Keeps track of which direction your character is going
+        this.facing = "right";       
+        this.dead = false;
+    },
+    
+    addAnimation: function(){
         this.renderable.addAnimation("idle", [78]);
         this.renderable.addAnimation("walk", [117, 118, 119, 120, 121, 122, 123,124, 125], 80);
         this.renderable.addAnimation("attack", [65, 66, 67, 68, 69, 70, 71, 72], 80);
-        
-        this.renderable.setCurrentAnimation("idle");
+      
     },
     
     update: function(delta){//if i dont update its not going to change the game
@@ -143,8 +165,3 @@ game.PlayerEntity = me.Entity.extend({
         }
     }
 });
-
-
-
-
-
