@@ -54,30 +54,10 @@ game.PlayerEntity = me.Entity.extend({
     update: function(delta){//if i dont update its not going to change the game
         this.now = new Date().getTime;//this updates our timer
         
-        if (this.health <= 0){
-            this.dead = true;
-        }
+        this.dead = checkIfDead();
         
-        if(me.input.isKeyPressed("right")) {
-            //adds to the position of my x by the velocity defined above in
-            //setVelocity() and multiplying it by me.timer.tick.
-            //me.timer.tick makes the movement look smooth
-            this.body.vel.x += this.body.accel.x * me.timer.tick;
-            this.facing = "right";
-            this.flipX(true);//this flips the animation
-        }else if(me.input.isKeyPressed("left")) {
-            this.facing = "left";
-            this.body.vel.x -=this.body.accel.x * me.timer.tick;
-            this.flipX(false);
-        }else{
-            this.body.vel.x = 0;
-        }
-        
-        if(me.input.isKeyPressed("jump") && !this.jumping && !this.falling){
-            this.body.jumping = true;
-            this.body.vel.y -= this.body.accel.y *me.timer.tick;
-        }
-        
+        this.checkKeyPressesAndMove();
+                    
         
         if(me.input.isKeyPressed("attack")) {//this is happening at the same time as the if statement
             if(!this.renderable.isCurrentAnimation("attack")){
@@ -105,6 +85,47 @@ game.PlayerEntity = me.Entity.extend({
 
         this._super(me.Entity, "update", [delta]);//this updates the animations
         return true;
+    },
+    
+    checkIfDead: function(){
+      if (this.health <= 0){
+          return true;//we are not setting the flag here
+        }
+        return false;
+    },
+    
+    checkKeyPressesAndMove: function(){
+        if(me.input.isKeyPressed("right")) {
+            this.moveRight();
+        }else if(me.input.isKeyPressed("left")) {
+            this.moveLeft();
+        }else{
+            this.body.vel.x = 0;
+        }
+        
+        if(me.input.isKeyPressed("jump") && !this.jumping && !this.falling){
+            this.jump();
+        }  
+    },
+    //this is a function for my move right code
+    moveRight: function(){
+        //adds to the position of my x by the velocity defined above in
+            //setVelocity() and multiplying it by me.timer.tick.
+            //me.timer.tick makes the movement look smooth
+            this.body.vel.x += this.body.accel.x * me.timer.tick;
+            this.facing = "right";
+            this.flipX(true);//this flips the animation
+    },
+      //this is a function for my move left code
+    moveLeft: function(){
+        this.facing = "left";
+            this.body.vel.x -=this.body.accel.x * me.timer.tick;
+            this.flipX(false);
+    },
+    
+    jump: function(){
+        this.body.jumping = true;
+        this.body.vel.y -= this.body.accel.y *me.timer.tick;
     },
     
     loseHealth: function(damage){
