@@ -133,6 +133,13 @@ game.PlayerEntity = me.Entity.extend({
     
     collideHandler: function(response) {
         if(response.b.type==='EnemyBaseEntity'){//this represents the difference between the players and its base's position
+            this.collideWithEnemyBase(response);
+        }else if(response.b.type==='EnemyCreep'){
+            this.collideWithEnemyCreep(response);
+        }
+    },
+    
+    collideWithEnemyBase: function(response){
             var ydif = this.pos.y - response.b.pos.y;
             var xdif = this.pos.x - response.b.pos.x;
             
@@ -141,47 +148,59 @@ game.PlayerEntity = me.Entity.extend({
                 this.body.vel.y = -1;
             }
             else if(xdif<-35 && this.facing==='right' && (xdif<0)){
-               this.body.vel.x = 0;//the code above inputs our x difference
-               //this.pos.x = this.pos.x -1;//this stops our player from coming in to the left
+               this.body.vel.x = 0;
             }else if(xdif<70 && this.facing==='left' && (xdif<0)){
                 this.body.vel.x = 0;
-                //this.pos.x = this.pos.x +1;
-            }
-            //this states that if the enemy base is attacked it loses health
-            if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= game.data.playerAttackTimer){
-                
+            }            
+            if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= game.data.playerAttackTimer){                
                 this.lastHit = this.now;//this updates this.lastHit
                 response.b.loseHealth(game.data.playerAttack);
             }
-        }else if(response.b.type==='EnemyCreep'){
+        },
+           
+    collideWithEnemyCreep: function(response){        
             var xdif = this.pos.x - response.b.pos.x;//these set our creeps
             var ydif = this.pos.y - response.b.pos.y;//x and y positions
             
-            if(xdif>0){//this is our x difference
-                //this.pos.x = this.pos.x + 1;
-                if(this.facing==="left"){//this keeps track of which way we face
-                    this.body.vel.x = 0;
-                }
-            }else{//this code keeps the creep from walking through our base
-                //this.pos.x = this.pos.x - 1;
-                if(this.facing==="right"){//this keeps us from walking thorugh our creep
-                    this.body.vel.x = 0;
-                }
-            }
-            if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= game.data.playerAttackTimer
+            this.stopMovement(xdif);
+            
+            if(this.checkAttack(xdif, ydif)){
+                this.hitCreep(response);
+            };
+            
+    },
+    
+    stopMovement: function(xdif){
+    if(xdif>0){
+        if(this.facing==="left"){
+            this.body.vel.x = 0;
+        }
+    }else{
+        if(this.facing==="right"){
+            this.body.vel.x = 0;
+        }
+    }
+    },
+    
+    checkAttack: function(xdif, ydif){
+        if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= game.data.playerAttackTimer
                     && (Math.abs(ydif) <=40) &&//this has our ydifference absolute value
                     ((xdif>0) && this.facing==="left") || ((xdif<0) && this.facing==="right")
                     ){//the code above stops us from going to much to the left or right
                 this.lastHit = this.now;
-                //if the creeps health i sless than our attack, execute code in if statement
-                if(response.b.health <= game.data.playerAttack){
-                    //adds one gold for every creep kill
-                    game.data.gold += 1;
+                //creeps health = less than value creep dies
+                return true;//this executes the code in collideWithEnemyCreep
+        }
+        return false;
+    },
+    
+    hitCreep: function(response){
+        if(response.b.health <= game.data.playerAttack){
+                    
+                    game.data.gold += 1;//adds one gold for every creep kill
                     console.log("Current gold: " + game.data.gold);
                 }
                 
-                response.b.loseHealth(game.data.playerAttack);//this code lets us hurt our enemy if were attacking it
-            }   
-        }
+                response.b.loseHealth(game.data.playerAttack);//this code hurts the enemy when attacked
     }
 });
