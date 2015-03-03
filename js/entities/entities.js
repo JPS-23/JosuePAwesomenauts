@@ -1,6 +1,6 @@
 game.PlayerEntity = me.Entity.extend({
     init: function(x, y, settings) {//we set up our functions here
-        this.setSuper();
+        this.setSuper(x, y);
         this.setPlayerTimers();
         this.setAttributes();    
         this.type = "PlayerEntity";
@@ -13,7 +13,7 @@ game.PlayerEntity = me.Entity.extend({
         this.renderable.setCurrentAnimation("idle");
     },
     //its good to try and keep functions under 20 lines
-    setSuper: function(){//this is the setSuper function that sets the setSuper class
+    setSuper: function(x, y){//this is the setSuper function that sets the setSuper class
        this._super(me.Entity, 'init', [x, y, {
                image: "player",
                width: 64,
@@ -54,7 +54,7 @@ game.PlayerEntity = me.Entity.extend({
     
     update: function(delta){//if i dont update its not going to change the game
         this.now = new Date().getTime;//this updates our timer        
-        this.dead = checkIfDead();        
+        this.dead = this.checkIfDead();        
         this.checkKeyPressesAndMove();     
         this.setAnimation();        
         me.collision.check(this, true, this.collideHandler.bind(this), true);
