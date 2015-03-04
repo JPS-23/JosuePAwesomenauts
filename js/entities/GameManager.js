@@ -48,14 +48,18 @@ game.HeroDeathManager = Object.extend({
 game.ExperienceManager = Object.extend({//this code is for my player to gain experience
     init: function(x, y, settings){
         this.alwaysUpdate = true;
+        this.gameOver = false;
     },
     
     update: function(){//these codes arent called until a flag is set
-        if(game.data.win === true){
+        if(game.data.win === true && !this.gameOver){
             game.data.exp += 10;
-        }else if(game.data.win === false){
+            this.gameOver = true;
+        }else if(game.data.win === false && !this.gameOver){
             game.data.exp += 1;
+            this.gameOver = true;
         }
+        console.log(game.data.exp);
         
         return true;
     }
