@@ -40,8 +40,26 @@ game.HeroDeathManager = Object.extend({
             me.game.world.removeChild(game.data.player);
             me.state.current().resetPlayer(10, 0);//this is for our reset function
         }
+        
+        return true;
     }
 });
 
+game.ExperienceManager = Object.extend({//this code is for my player to gain experience
+    init: function(x, y, settings){
+        this.alwaysUpdate = true;
+    },
+    
+    update: function(){//these codes arent called until a flag is set
+        if(game.data.win === true){
+            game.data.exp += 10;
+        }else if(game.data.win === false){
+            game.data.exp += 1;
+        }
+        
+        return true;
+    }
+
+});
 
 

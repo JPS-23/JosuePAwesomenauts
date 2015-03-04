@@ -24,6 +24,7 @@ game.PlayerBaseEntity = me.Entity.extend({//this is my player base entity
     update:function(delta) {
        if(this.health<=0) {//this says that if my health is 0 then were dead
            this.broken = true;
+           game.data.win = false;
            this.renderable.setCurrentAnimation("broken");//this makes the tower image look normal
        }
        this.body.update(delta);//this makes sure the game updates
