@@ -53,17 +53,24 @@ game.ExperienceManager = Object.extend({//this code is for my player to gain exp
     
     update: function(){//these codes arent called until a flag is set
         if(game.data.win === true && !this.gameOver){
-            game.data.exp += 10;
-            this.gameOver = true;
+            this.gameOver(true);
         }else if(game.data.win === false && !this.gameOver){
-            game.data.exp += 1;
-            this.gameOver = true;
+            this.gameOver(false);            
         }
-        console.log(game.data.exp);
         
         return true;
+    },
+    
+    gameOver: function(win){
+        if(win){//this function gives us experience in the game
+            game.data.exp += 10;
+        }else{
+            game.data.exp += 1;
+        }
+               
+        this.gameOver = true;//this is part of the code where if we lose our health we die
+        me.save.exp = game.data.exp;
     }
 
 });
-
 
