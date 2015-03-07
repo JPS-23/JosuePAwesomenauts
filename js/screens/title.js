@@ -31,6 +31,27 @@ game.TitleScreen = me.ScreenObject.extend({
                         me.state.change(me.state.PLAY);//this states the changes we just made
                     }
                 })));
+                
+                me.game.world.addChild(new (me.Renderable.extend({
+                    init: function(){//this is a generic function/the inilization of the text
+                        this._super(me.Renderable, 'init', [380, 340, 250, 50]);
+                        this.font = new me.Font("Arial", 46, "white");//this gives us a font to use
+                        me.input.registerPointerEvent('pointerdown', this, this.newGame.bind(this), true);
+                    },//the line above lets us use our pointer to start the game
+                    
+                    draw: function(renderer){//this adds text on the screen
+                        this.font.draw(renderer.getContext(), "CONTINUE", this.pos.x, this.pos.y);
+                    },
+                    
+                    update: function(dt){
+                        return true;
+                    },
+                    
+                    newGame: function(){
+                        me.input.releasePointerEvent('pointerdown', this);                        
+                        me.state.change(me.state.PLAY);//this states the changes we just made
+                    }
+                })));
         
         },
 	
