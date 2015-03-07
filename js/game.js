@@ -6,11 +6,15 @@ var game = {
 	data : {//this is data we use in the game
 		// score, these are aslo basic variables
 		score : 0,
-                enemyBaseHealth: 10,
-                playerBaseHealth: 10,
+                enemyBaseHealth: 1,
+                playerBaseHealth: 1,
                 enemyCreepHealth: 10,
                 playerHealth: 10,
                 enemyCreepAttack: 1,
+                //orcBaseDamage: 10,
+                //orcBaseHealth: 100,
+                //orcBaseSpeed: 3,
+                //orcBaseDefense: 0,
                 playerAttack: 5,
                 playerAttackTimer: 2000,
                 enemyCreepAttackTimer:1000,
@@ -45,6 +49,7 @@ var game = {
 	}
         
         me.save.add({exp: 0, exp1: 0, exp2: 0, exp3: 0, exp4: 0});
+        
 
 	// Initialize the audio.
 	me.audio.init("mp3,ogg");
