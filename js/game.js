@@ -6,15 +6,11 @@ var game = {
 	data : {//this is data we use in the game
 		// score, these are aslo basic variables
 		score : 0,
-                enemyBaseHealth: 1,
-                playerBaseHealth: 1,
+                enemyBaseHealth: 10,
+                playerBaseHealth: 10,
                 enemyCreepHealth: 10,
                 playerHealth: 10,
                 enemyCreepAttack: 1,
-                //orcBaseDamage: 10,
-                //orcBaseHealth: 100,
-                //orcBaseSpeed: 3,
-                //orcBaseDefense: 0,
                 playerAttack: 5,
                 playerAttackTimer: 2000,
                 enemyCreepAttackTimer:1000,
@@ -47,10 +43,11 @@ var game = {
 			me.plugin.register.defer(this, debugPanel, "debug");
 		});
 	}
-        
+
         me.save.add({exp: 0, exp1: 0, exp2: 0, exp3: 0, exp4: 0});
         
-
+        me.save.SPENDEXP = 112;//this loads our spendExp screen
+        
 	// Initialize the audio.
 	me.audio.init("mp3,ogg");
 
@@ -73,9 +70,10 @@ var game = {
                 me.pool.register("GameTimerManager", game.GameTimerManager);//this registers the game timer code
                 me.pool.register("HeroDeathManager", game.HeroDeathManager);//this registers my hero code
                 me.pool.register("ExperienceManager", game.ExperienceManager);
-                
+                //MENU and PLAY are established variables for melonjs
 		me.state.set(me.state.MENU, new game.TitleScreen());
 		me.state.set(me.state.PLAY, new game.PlayScreen());
+                me.state.set(me.state.SPENDEXP, new game.SpendExp());
 
 		// Start the game.
 		me.state.change(me.state.MENU);//this is for our title screen

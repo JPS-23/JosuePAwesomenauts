@@ -10,6 +10,7 @@ game.resources = [
         {name: "tower", type:"image", src: "data/img/tower_round.svg.png"},//this is to load our tower image
         {name: "creep1", type:"image", src: "data/img/brainmonster.png"},//this loads our creep image
         {name: "title-screen", type:"image", src: "data/img/title.png"},
+        {name: "exp-screen", type:"image", src: "data/img/loadpic.png"},//this gives us a new background
         
 	/* Atlases 
 	 * @example
