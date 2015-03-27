@@ -80,10 +80,42 @@ game.SpendGold = Object.extend({
         this.lastPaused = new Date().getTime();//lets us know how long its been since our last purchase
         this.paused = false;
         this.alwaysUpdate = true;//this makes sure were always updating
+        this.updateWhenPaused = true;
+        this.buying = false;//this is false because when the game begins we will not be buying
     },
     
     update: function(){
+        this.now = new Date().getTime();
+        
+        if(me.input.isKeyPressed("buy") && this.now-this.lastBuy >=1000){
+            this.lastBuy = this.now;
+            if(!this.buying){
+                this.startBuying();
+            }else{
+                this.startBuying();
+            }
+            
+        }
+        
         return true;
+    },
+    
+    startBuying: function(){
+        this.buying = true;//this keeps track of when to open it
+        me.state.pause(me.state.PLAY);//this pauses the game so we can buy something
+        game.data.pausePos = me.game.viewport.localToWorld(0, 0);
+        game.data.buyscreen = new me.Sprite(game.data.pausePos.X, game.data.pausePos.y, me.loader.getImage('gold-screen'));
+        game.data.buyscreen.updateWhenPaused = true;
+        game.data.buyscreen.setOpacity(0.8);//this lets us see whats going on behind the pause screen
+        me.game.world.addChild(game.data.buyscreen, 34);
+        game.data.player.body.setVelocity(0, 0);
+    },
+    
+    stopBuying: function(){
+        this.buying = false;//this keeeps track of when to open it
+        me.state.resume(me.state.PLAY);//this resumes the games
+        game.data.player.body.setVelocity(game.data.playerMoveSpeed, 20);
+        me.game.world.removeChild(game.data.buyscreen);        
     }
     
 });
