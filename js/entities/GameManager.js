@@ -109,13 +109,44 @@ game.SpendGold = Object.extend({
         game.data.buyscreen.setOpacity(0.8);//this lets us see whats going on behind the pause screen
         me.game.world.addChild(game.data.buyscreen, 34);
         game.data.player.body.setVelocity(0, 0);
+        me.input.bindKey(me.input.KEY.F1, "F1", true);
+        me.input.bindKey(me.input.KEY.F2, "F2", true);
+        me.input.bindKey(me.input.KEY.F3, "F3", true);
+        me.input.bindKey(me.input.KEY.F4, "F4", true);
+        me.input.bindKey(me.input.KEY.F5, "F5", true);
+        me.input.bindKey(me.input.KEY.F6, "F6", true);
+        this.setBuyText();
+    },
+    
+    setBuyText: function(){
+      game.data.buytext = new (me.Renderable.extend({
+        init: function(){//this is a generic function/the inilization of the text
+            this._super(me.Renderable, 'init', [game.data.pausePos.x, game.data.pausePos.y, 300, 50]);
+            this.font = new me.Font("Arial", 26, "white");//this gives us a font to use                       
+            this.updateWhenPaused = true;
+            this.alwaysUpdate = true;
+        },
+        //These lines of code are for the spendExp screen
+            draw: function(renderer){//this adds text on the screen
+            this.font.draw(renderer.getContext(), "PRESS F1-F4 TO BUY, B TO EXIT", this.pos.x, this.pos.y);
+        }
+
+        }));
+      me.game.world.addChild(game.data.buytext, 35);
     },
     
     stopBuying: function(){
         this.buying = false;//this keeeps track of when to open it
         me.state.resume(me.state.PLAY);//this resumes the games
         game.data.player.body.setVelocity(game.data.playerMoveSpeed, 20);
-        me.game.world.removeChild(game.data.buyscreen);        
+        me.game.world.removeChild(game.data.buyscreen);
+        me.input.unbindKey(me.input.KEY.F1, "F1", true);//this unbinds
+        me.input.unbindKey(me.input.KEY.F2, "F2", true);//all these
+        me.input.unbindKey(me.input.KEY.F3, "F3", true);//keys
+        me.input.unbindKey(me.input.KEY.F4, "F4", true);
+        me.input.unbindKey(me.input.KEY.F5, "F5", true);
+        me.input.unbindKey(me.input.KEY.F6, "F6", true);
+        me.game.world.removeChild(game.data.buytext);
     }
     
 });
