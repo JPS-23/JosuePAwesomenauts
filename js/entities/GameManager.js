@@ -7,7 +7,8 @@ game.GameTimerManager = Object.extend({//the gameManager class kills/revives our
     },
     
     update: function(){
-        this.now = new Date().getTime();                        
+        this.now = new Date().getTime();
+
         this.goldTimerCheck();//this is a timer for my getGold code
         this.creepTimerCheck();//this is a timer for my creeps                        
         
@@ -77,11 +78,12 @@ game.ExperienceManager = Object.extend({//this code is for my player to gain exp
 game.SpendGold = Object.extend({
     init: function(x, y, settings){
         this.now = new Date().getTime();
-        this.lastPaused = new Date().getTime();//lets us know how long its been since our last purchase
+        this.lastBuy = new Date().getTime();
+        //this.lastPaused = new Date().getTime();//lets us know how long its been since our last purchase
         this.paused = false;
         this.alwaysUpdate = true;//this makes sure were always updating
         this.updateWhenPaused = true;
-        this.buying = false;//this is false because when the game begins we will not be buying
+        this.buying = false;//this is false because when the game begins we will not be buying       
     },
     
     update: function(){
@@ -92,10 +94,12 @@ game.SpendGold = Object.extend({
             if(!this.buying){
                 this.startBuying();
             }else{
-                this.startBuying();
+                this.stopBuying();
             }
             
         }
+        
+        this.checkBuy();
         
         return true;
     },
@@ -138,6 +142,7 @@ game.SpendGold = Object.extend({
         }
 
         }));
+        
       me.game.world.addChild(game.data.buytext, 35);
     },
     
@@ -153,6 +158,75 @@ game.SpendGold = Object.extend({
         me.input.unbindKey(me.input.KEY.F5, "F5", true);
         me.input.unbindKey(me.input.KEY.F6, "F6", true);
         me.game.world.removeChild(game.data.buytext);
+    },
+    
+    checkBuyKeys: function(){
+        if(me.input.isKeyPressed("F1")){
+            if(this.checkCost(1)){//this only lets us purchase the item if we have enough gold
+                this.makePurchase(1);//this makes the purchase happen if we have enough gold
+            }
+        }else if(me.input.isKeyPressed("F2")){
+            if(this.checkCost(2)){//this only lets us purchase the item if we have enough gold
+                this.makePurchase(2);//this makes the purchase happen if we have enough gold
+            }
+        }else if(me.input.isKeyPressed("F3")){
+            if(this.checkCost(3)){//this only lets us purchase the item if we have enough gold
+                this.makePurchase(3);//this makes the purchase happen if we have enough gold
+            }
+        }else if(me.input.isKeyPressed("F4")){
+            if(this.checkCost(4)){//this only lets us purchase the item if we have enough gold
+                this.makePurchase(4);//this makes the purchase happen if we have enough gold
+            }
+        }else if(me.input.isKeyPressed("F5")){
+            if(this.checkCost(5)){//this only lets us purchase the item if we have enough gold
+                this.makePurchase(5);//this makes the purchase happen if we have enough gold
+            }
+        }else if(me.input.isKeyPressed("F6")){
+            if(this.checkCost(6)){//this only lets us purchase the item if we have enough gold
+                this.makePurchase(6);//this makes the purchase happen if we have enough gold
+            }
+        }
+    },
+    
+    checkCost: function(skill){
+       if(skill===1 && (game.data.gold >= ((game.data.skill1+1)*10))){//this takes the level of our experience and adds 1point
+           return true;
+       }else if(skill===2 && (game.data.gold >= ((game.data.skill1+2)*10))){//this takes the level of our experience and adds 1point
+           return true;
+       }else if(skill===3 && (game.data.gold >= ((game.data.skill1+3)*10))){//this takes the level of our experience and adds 1point
+           return true;
+       }else if(skill===4 && (game.data.gold >= ((game.data.skill1+4)*10))){//this takes the level of our experience and adds 1point
+           return true;
+       }else if(skill===5 && (game.data.gold >= ((game.data.skill1+5)*10))){//this takes the level of our experience and adds 1point
+           return true;
+       }else if(skill===6 && (game.data.gold >= ((game.data.skill1+6)*10))){//this takes the level of our experience and adds 1point
+           return true;
+       }else{
+           return false;
+       }
+    },
+    
+    makePurchase: function(skill){
+        if(skill === 1){
+        game.data.gold -= ((game.data.skill1 +1)* 10);//this subtracts the used gold
+        game.data.skill1 += 1;
+        game.data.player.attack += 1;
+        }else if(skill ===2){
+            game.data.gold -= ((game.data.skill2 +1)* 10);
+            game.data.skill2 += 1;
+        }else if(skill ===3){
+            game.data.gold -= ((game.data.skill3 +1)* 10);
+            game.data.skill3 += 1;
+        }else if(ability ===1){
+            game.data.gold -= ((game.data.ability +1)* 10);
+            game.data.abillity1 += 1;
+        }else if(ability ===2){
+            game.data.gold -= ((game.data.ability2 +1)* 10);
+            game.data.ability2 += 1;
+        }else if(ability ===3){
+            game.data.gold -= ((game.data.ability3 +1)* 10);
+            game.data.ability3 += 1;
+        }
     }
     
 });
