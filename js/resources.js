@@ -12,6 +12,8 @@ game.resources = [
         {name: "title-screen", type:"image", src: "data/img/title.png"},
         {name: "exp-screen", type:"image", src: "data/img/loadpic.png"},//this gives us a new background
         {name: "gold-screen", type:"image", src: "data/img/spend.png"},
+        {name: "load-screen", type:"image", src: "data/img/loadpic.png"},//this gives us a background
+        {name: "new-screen", type:"image", src: "data/img/newpic.png"},//for the load and new profile screen
         
 	/* Atlases 
 	 * @example

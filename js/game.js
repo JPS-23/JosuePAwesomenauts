@@ -1,96 +1,103 @@
 
 /* Game namespace */
 var game = {
-
-	// an object where to store game information
-	data : {//this is data we use in the game
-		// score, these are aslo basic variables
-		score : 0,
-                enemyBaseHealth: 10,
-                playerBaseHealth: 10,
-                enemyCreepHealth: 10,
-                playerHealth: 10,
-                enemyCreepAttack: 1,
-                playerAttack: 5,
+    // an object where to store game information
+    data: {//this is data we use in the game
+        // score, these are aslo basic variables
+        score: 0,
+        option1: "",
+        option2: "",
+        enemyBaseHealth: 10,
+        playerBaseHealth: 10,
+        enemyCreepHealth: 10,
+        playerHealth: 10,
+        enemyCreepAttack: 1,
+        playerAttack: 5,
 //                orcBaseDamage: 10,
 //                orcBaseHealth: 100,
 //                orcBaseSpeed: 3,
 //                orcBaseDefense: 0,
-                playerAttackTimer: 2000,
-                enemyCreepAttackTimer:1000,
-                playerMoveSpeed:5,
-                creepMoveSpeed: 5,
-                gameTimerManager: "",
-                heroDeathManager: "",
-                player: "",
-                exp: 0,
-                gold: 0,
-                ability1: 0,
-                ability2: 0,
-                ability3: 0,
-                skill1: 0,
-                skill2: 0,
-                skill3: 0,
-                exp1: 0,
-                exp2: 0,
-                exp3: 0,
-                exp4: 0,
-                win: "",
-                pausePos: "",
-                buyscreen: "",
-                buytext: ""
-	},
-	
-	
-	// Run on page load.
-	"onload" : function () {
-	// Initialize the video.
-	if (!me.video.init("screen",  me.video.CANVAS, 1067, 600, true, '1.0')) {
-		alert("Your browser does not support HTML5 canvas.");
-		return;
-	}
+        playerAttackTimer: 2000,
+        enemyCreepAttackTimer: 1000,
+        playerMoveSpeed: 5,
+        creepMoveSpeed: 5,
+        gameTimerManager: "",
+        heroDeathManager: "",
+        //spearTimer: 0,
+        player: "",
+        exp: 0,
+        gold: 0,
+        ability1: 0,
+        ability2: 0,
+        ability3: 0,
+        skill1: 0,
+        skill2: 0,
+        skill3: 0,
+        exp1: 0,
+        exp2: 0,
+        exp3: 0,
+        exp4: 0,
+        win: "",
+        pausePos: "",
+        buyscreen: "",
+        buytext: "",
+        minimap: "",
+        miniPlayer: ""
+   },
+    // Run on page load.
+    "onload": function() {
+        // Initialize the video.
+        if (!me.video.init("screen", me.video.CANVAS, 1067, 600, true, '1.0')) {
+            alert("Your browser does not support HTML5 canvas.");
+            return;
+        }
 
-	// add "#debug" to the URL to enable the debug Panel
-	if (document.location.hash === "#debug") {
-		window.onReady(function () {
-			me.plugin.register.defer(this, debugPanel, "debug");
-		});
-	}
+        // add "#debug" to the URL to enable the debug Panel
+        if (document.location.hash === "#debug") {
+            window.onReady(function() {
+                me.plugin.register.defer(this, debugPanel, "debug");
+            });
+        }
 
         me.save.add({exp: 0, exp1: 0, exp2: 0, exp3: 0, exp4: 0});
-        
+
         me.save.SPENDEXP = 112;//this loads our spendExp screen
-        
-	// Initialize the audio.
-	me.audio.init("mp3,ogg");
+        me.save.LOAD = 113;
+        me.save.NEW = 114;
 
-	// Set a callback to run when loading is complete.
-	me.loader.onload = this.loaded.bind(this);
+        // Initialize the audio.
+        me.audio.init("mp3,ogg");
 
-	// Load the resources.
-	me.loader.preload(game.resources);
+        // Set a callback to run when loading is complete.
+        me.loader.onload = this.loaded.bind(this);
 
-	// Initialize melonJS and display a loading screen.
-	me.state.change(me.state.LOADING);
-},
+        // Load the resources.
+        me.loader.preload(game.resources);
 
-	// Run on game resources loaded.
-	"loaded" : function () {
-                me.pool.register("player", game.PlayerEntity, true);//this registers our player also connects it to the player entity
-                me.pool.register("PlayerBase", game.PlayerBaseEntity);//this registers the player base
-                me.pool.register("EnemyBase", game.EnemyBaseEntity);//this registers the enemy base
-                me.pool.register("EnemyCreep", game.EnemyCreep, true);//this registers the enemy
-                me.pool.register("GameTimerManager", game.GameTimerManager);//this registers the game timer code
-                me.pool.register("HeroDeathManager", game.HeroDeathManager);//this registers my hero code
-                me.pool.register("ExperienceManager", game.ExperienceManager);
-                me.pool.register("SpendGold", game.SpendGold);
-                //MENU and PLAY are established variables for melonjs
-		me.state.set(me.state.MENU, new game.TitleScreen());
-		me.state.set(me.state.PLAY, new game.PlayScreen());
-                me.state.set(me.state.SPENDEXP, new game.SpendExp());
-
-		// Start the game.
-		me.state.change(me.state.MENU);//this is for our title screen
-	}
+        // Initialize melonJS and display a loading screen.
+        me.state.change(me.state.LOADING);
+    },
+    // Run on game resources loaded.
+    "loaded": function() {
+        me.pool.register("player", game.PlayerEntity, true);//this registers our player also connects it to the player entity
+        me.pool.register("PlayerBase", game.PlayerBaseEntity);//this registers the player base
+        me.pool.register("EnemyBase", game.EnemyBaseEntity);//this registers the enemy base
+        me.pool.register("EnemyCreep", game.EnemyCreep, true);//this registers the enemy
+        me.pool.register("GameTimerManager", game.GameTimerManager);//this registers the game timer code
+        me.pool.register("HeroDeathManager", game.HeroDeathManager);//this registers my hero code
+        me.pool.register("ExperienceManager", game.ExperienceManager);
+        me.pool.register("SpendGold", game.SpendGold);
+        //me.pool.register("spear", game.SpearThrow, true);
+        me.pool.register("minimap", game.MiniMap, true);
+        me.pool.register("miniplayer", game.MiniPlayerLocation, true);
+        //MENU and PLAY are established variables for melonjs
+        me.state.set(me.state.MENU, new game.TitleScreen());
+        me.state.set(me.state.PLAY, new game.PlayScreen());
+        me.state.set(me.state.SPENDEXP, new game.SpendExp());
+        me.state.set(me.state.LOAD, new game.LoadProfile());
+        me.state.set(me.state.NEW, new game.NewProfile());
+        // Start the game.
+        me.state.change(me.state.MENU);//this is for our title screen
+    }
 };
 

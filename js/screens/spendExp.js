@@ -5,11 +5,11 @@ game.SpendExp = me.ScreenObject.extend({
 	onResetEvent: function() {//the code below is to load the title image	
 		me.game.world.addChild(new me.Sprite(0, 0, me.loader.getImage('exp-screen')), -10); // TODO
                 
-                me.input.unbindKey(me.input.KEY.F1, "F1");//these lines
-                me.input.unbindKey(me.input.KEY.F2, "F2");//of code set up
-                me.input.unbindKey(me.input.KEY.F3, "F3");//the buttons
-                me.input.unbindKey(me.input.KEY.F4, "F4");//so we can use
-                me.input.unbindKey(me.input.KEY.F5, "F5");//them in the game
+                me.input.bindKey(me.input.KEY.F1, "F1");//these lines
+                me.input.bindKey(me.input.KEY.F2, "F2");//of code set up
+                me.input.bindKey(me.input.KEY.F3, "F3");//the buttons
+                me.input.bindKey(me.input.KEY.F4, "F4");//so we can use
+                me.input.bindKey(me.input.KEY.F5, "F5");//them in the game
                 var exp1cost = ((game.data.exp1 + 1) * 10);//this partially cleans our code
                 
                 me.game.world.addChild(new (me.Renderable.extend({
