@@ -4,6 +4,9 @@ game.NewProfile = me.ScreenObject.extend({
 	 */
 	onResetEvent: function() {//the code below is to load the title image	
 		me.game.world.addChild(new me.Sprite(0, 0, me.loader.getImage('new-screen')), -10); // TODO
+                document.getElementById("input").style.visibility = "visible";//this makes the input button visible
+                document.getElementById("register").style.visibility = "visible";//this makes the register button visible
+                
                 
                 me.input.unbindKey(me.input.KEY.B);
                 me.input.unbindKey(me.input.KEY.Q);
@@ -30,7 +33,8 @@ game.NewProfile = me.ScreenObject.extend({
 	/**	
 	 *  action to perform when leaving this screen (state change)
 	 */
-	onDestroyEvent: function() {
-            
+	onDestroyEvent: function() {//here we are making the buttons hidden again
+          document.getElementById("input").style.visibility = "hidden";
+          document.getElementById("register").style.visibility = "hidden";  
         }
 });

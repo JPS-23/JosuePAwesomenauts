@@ -59,8 +59,6 @@ var game = {
             });
         }
 
-        me.save.add({exp: 0, exp1: 0, exp2: 0, exp3: 0, exp4: 0});
-
         me.save.SPENDEXP = 112;//this loads our spendExp screen
         me.save.LOAD = 113;
         me.save.NEW = 114;

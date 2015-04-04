@@ -31,3 +31,17 @@ body {
 	image-rendering: optimize-contrast;
 	-ms-interpolation-mode: nearest-neighbor;
 }
+
+#input{//this is an input id
+    display: block;//this is what we want the text to appear in
+    text-align: center;//this aligns the text to the center
+    visibility: hidden;//this keeps it hidden
+}
+
+#load{
+    visibility: hidden;
+}
+
+#register{
+    visibility: hidden;
+}
