@@ -56,7 +56,7 @@
                 <script type="text/javascript" src="js/gamemanagers/HeroDeathManager.js"></script>              
                 <script type="text/javascript" src="js/entities/EnemyCreep.js"></script>
 		<script type="text/javascript" src="js/entities/HUD.js"></script>
-                <script type="text/javascript" src="js/entities/SpearThrow.js">
+                <!--<script type="text/javascript" src="js/entities/SpearThrow.js"> -->
                 <script type="text/javascript" src="js/entities/MiniMap.js"></script>
 		<script type="text/javascript" src="js/entities/MiniPlayerLocation.js"></script>
 		<script type="text/javascript" src="js/screens/title.js"></script>
@@ -132,7 +132,7 @@
                         if(response==="Invalid username and password"){//this is the text that will appear in the alert
                             alert(response);//this gives off an alert if the wrong username/password is inputed
                         }
-                    }
+                    
                     else{
                             var data = jQuery.parseJSON(response);
                             game.data.exp = data["exp"];//this gives
