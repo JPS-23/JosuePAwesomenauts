@@ -1,5 +1,5 @@
 <?php
-    require_once(__DIR__ . "Database.php");
+    require_once(__DIR__ . "/Database.php");
     session_start();
     //prevents hackers from hacking into a session without loggin in
     session_regenerate_id(true);
@@ -8,7 +8,7 @@
     
     $host = "localhost";
     $username = "root";
-    $password = "root";
+    $password = "";
     $database = "awesomenauts_db";//this is the name of the project
     
     if(!isset($_SESSION["connection"])){
